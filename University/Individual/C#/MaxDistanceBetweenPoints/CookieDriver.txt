@@ -1,0 +1,264 @@
+﻿///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//
+//	Project:		Project 2
+//	File Name:		CookieDriver.cs
+//	Description:	To find the most points in quadrant 1 and 3 if the vertical line is in a worst case spot.
+//	Course:			CSCI 3230 - Algorithms	
+//	Author:			Matthew Humphrey, Humphreymg@goldmail.etsu.edu
+//	Created:		Saturday, March 12 2016
+//	Copyright:		Matthew Humphrey,  2016
+//
+//
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Project2MatthewHumphrey
+{
+    /// <summary>
+    /// calculates the most amount of points that can be in quadrants 1 and 3 in a worst case senario
+    /// </summary>
+    class CookieDriver
+    {
+        /// <summary>
+        /// the main method that takes care of all input and output
+        /// </summary>
+        /// <param name="args"></param>
+        static void Main(string[] args)
+        {
+            int numTestCases = int.Parse(Console.ReadLine());   //the number of cases to test
+            int numberOfValues;             //the number of values in a case
+            Stopwatch sw = new Stopwatch(); //keeps track of time
+            List<int> x;                    //the sorted list of x's
+            List<int> tempX;                //unsorted list of x's
+            List<int> y;                    //list of y's based on sort of x's
+            List<int> tempY;                //unsorted list of y's
+            List<string> values;            //the string forms of the points
+            List<string> point;             //sepearated strings of the points
+            String instring;                //the incoming string
+            int temp;                       //used to temporarily hold values
+            List<int> max = new List<int>(numTestCases);    //the max's of each test case
+            sw.Start();         
+
+            for (int j = 0; j < numTestCases; j++)      //goes through each test case
+            {
+                numberOfValues = int.Parse(Console.ReadLine());
+                x = new List<int>(numberOfValues);
+                y = new List<int>(numberOfValues);
+
+                tempX = new List<int>(numberOfValues);
+                tempY = new List<int>(numberOfValues);
+                values = new List<string>(numberOfValues);
+                point = new List<string>(2);
+               
+                for (int i = 0; i < numberOfValues; i++)    //gets the points into their unsorted lists
+                {
+                    instring = Console.ReadLine();
+                    values.Add(instring);
+                    point.AddRange(values[i].Split(' ').ToList());
+                    int.TryParse(point[0], out temp);
+                    tempX.Add(temp);
+                    int.TryParse(point[1], out temp);
+                    tempY.Add(temp);
+                    point.Clear();
+                }
+                for (int i = 0;tempX.Count > 0; i++)    //sorts the lists based on the x's
+                {
+                    temp = tempX.IndexOf(tempX.Min());
+                    x.Add(tempX[temp]);
+                    y.Add(tempY[temp]);
+                    tempX.RemoveAt(temp);
+                    tempY.RemoveAt(temp);
+                }
+                max.Add(findVertical(x, y));
+            }
+
+            Console.WriteLine(sw.Elapsed);
+            foreach (int i in max)          //writes each of the max's
+            {
+                Console.WriteLine(i);
+            }
+            Console.ReadLine();
+
+        }
+
+        /// <summary>
+        /// Tests each vertical line for the lowest max.
+        /// </summary>
+        /// <param name="x">The x values.</param>
+        /// <param name="y">The y values.</param>
+        /// <returns>
+        /// The lowest possible max
+        /// </returns>
+        private static int findVertical(List<int> x, List<int> y)
+        {
+            float vertical = x[0] - (float).01;         //the value of the vertical line
+            int max = x.Count;                          //the smallest maximum number of points so far
+            int temp;                                   //the value retrived from testing horizontals
+            int inc = 0;                                //the index of the last passed x
+            List<int> copyY = new List<int>(y.Count);   //a sorted copy of the y values
+
+            copyY.AddRange(y);
+            copyY.Sort();
+
+            temp = findHorizonal(x, y,copyY, vertical, max);    
+            if (temp < max)
+            {
+                max = temp;
+            }
+            
+            for (int i = 0; inc < x.Count;)          //goes through each of the remain placements of the vertical
+            {
+                if (i == 0)
+                {
+                    vertical = x[inc];               //move to the next x value
+                    i = 1;
+                }
+                else
+                {
+                    vertical += (float).01;         //move just past the previous point
+                    inc = nextDistinctVal(x, inc);  //get the next distinct index
+                    i = 0;
+                }
+
+                temp = findHorizonal(x, y,copyY, vertical, max);
+                if (temp < max)
+                {
+                    max = temp;
+                }
+
+            }
+            return max;
+        }
+
+        /// <summary>
+        /// Finds the next distinct value.
+        /// </summary>
+        /// <param name="pnt">The list of values.</param>
+        /// <param name="inc">The index to start at.</param>
+        /// <returns>
+        /// the index of the next distinct element in the list
+        /// </returns>
+        private static int nextDistinctVal(List<int> pnt, int inc)
+        {
+            do      //incriment the value at least once
+            {
+                inc += 1;
+                if (inc > pnt.Count - 1)   //can't do the comparison if the value is too close to the end
+                {
+                    return inc;
+                }
+            } while (pnt[inc] == pnt[inc - 1]); //check if the new value is different
+            return inc;
+        }
+
+        /// <summary>
+        /// Tests each possible horizontal line to see where the best max would be.
+        /// </summary>
+        /// <param name="x">The x values.</param>
+        /// <param name="y">The y values.</param>
+        /// <param name="sortedY">The y values in order.</param>
+        /// <param name="vertical">The vertical divider.</param>
+        /// <param name="prev">The current max.</param>
+        /// <returns>
+        /// The max points that could be in quadrants 1 and 3 with the defined vertical
+        /// </returns>
+        private static int findHorizonal(List<int> x, List<int> y, List<int> sortedY, float vertical, int prev)
+        {
+            float horizontal = sortedY[0] - (float).01;       //the horizontal divider to test
+            int max = 0;                //the most points so far
+            int temp = 0;               //the points found for the current dividers
+            int inc = 0;                //which current number of points passed with the horizontal
+            
+
+
+            temp = calcPnts(x, y, vertical, horizontal, prev);
+            if (max < temp)         //if temp is greater than the max
+            {
+                max = temp;
+            }
+
+            for (int i = 0; inc < sortedY.Count;) //used to go through each possible position of the horizontal
+            {
+
+                if (i == 0)       
+                {
+                    horizontal = sortedY[inc];      //jump to the next point
+                    i = 1;
+                }
+                else
+                {
+                    horizontal += (float).01;       //go just past the next point
+                    inc = nextDistinctVal(sortedY, inc);    //find the next point that is not the same
+                    i = 0;
+                }
+                temp = calcPnts(x, y, vertical, horizontal, prev);
+                if (max < temp)
+                {
+                    max = temp;
+                }
+
+            }
+
+            return max;
+        }
+
+        /// <summary>
+        /// Calculates the amount of points caught with current horizontal and vertical.
+        /// </summary>
+        /// <param name="x">The x values.</param>
+        /// <param name="y">The y values.</param>
+        /// <param name="vertical">The vertical dividing line.</param>
+        /// <param name="horizontal">The horizontal dividing line.</param>
+        /// <param name="low">The lowest max so far.</param>
+        /// <returns>
+        /// the number of points in quadrants 1 and 3
+        /// </returns>
+        private static int calcPnts(List<int> x, List<int> y, float vertical, float horizontal, int low)
+        {
+            int points = 0;   //the number of points caught so far
+            int i = 0;        //the indexer for the for loops. Declared here so that it can be used in both loops
+
+            try
+            {
+                for (; x[i] < vertical; i++)    //go through every point before the x's cross the vertical
+                {
+                    if (y[i] < horizontal)      //if the point is in quadrant 3
+                    {
+                        points += 1;
+                        if (points > low)       //if there are more points than the lowest amount recorded so far
+                        {
+                            return points;
+                        }
+                    }
+                }
+            }
+            catch (ArgumentOutOfRangeException) //this exception should only be thrown if the vertical
+            {                                   //line was past all the points
+                return points;
+            }
+            if (x[i] == vertical)               //if the i is currently sitting on the vertical
+            {                                  
+                i = nextDistinctVal(x, i);
+            }
+            for (; i < y.Count; i++)            //go through every point after the crossing of the vertical
+            {
+                if (y[i] > horizontal)          //check if in quadrant 1
+                {
+                    points += 1;                
+                    if (points > low)           //if the current amount is already too much
+                    {
+                        return points;
+                    }
+                }
+            }
+            return points;
+        }
+    }
+}

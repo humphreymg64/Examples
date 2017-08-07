@@ -1,0 +1,451 @@
+Microsoft (R) Macro Assembler Version 6.11		    11/02/15 07:55:16
+proj3.asm						     Page 1 - 1
+
+
+				Comment#
+				**************************************************************************************
+				 Program Name:  proj3.asm
+				 Programmer:    Matthew Garret Humphrey
+				 Class:         CSCI 2160-001
+				 Date:          October 24, 2015
+				 Purpose: 		
+				*************************************************************************************#
+					.486
+					.model flat
+					.stack 100h 
+					
+					ExitProcess PROTO Near32 stdcall, dwExitCode:dword 
+					ascint32	PROTO Near32 stdcall, lpStringHolding:dword 
+					intasc32	PROTO Near32 stdcall, lpStringToHold:dword, dVal:dword 
+					getstring	PROTO Near32 stdcall, lpStringToHold:dword, dNumChars:dword 
+					putstring	PROTO Near32 stdcall, lpStringToDisplay:dword 
+					getche		PROTO Near32 stdcall
+					getch		PROTO Near32 stdcall
+					putch		PROTO Near32 stdcall, bVal:byte	
+					extern extractDwords:near, displayArray:near, smallestValue:near, sumUpArray:near, multArrays:near
+					
+ 00000000				.data
+ 00000000 0A 0D 09 4E 61	strHeader1	byte	10,13,9,"Name: ",9,"Matthew Humphrey",0
+	   6D 65 3A 20 09
+	   4D 61 74 74 68
+	   65 77 20 48 75
+	   6D 70 68 72 65
+	   79 00
+ 0000001B 0A 0D 09 43 6C	strHeader2	byte	10,13,9,"Class: ",9,"CSCI 2160-001",0
+	   61 73 73 3A 20
+	   09 43 53 43 49
+	   20 32 31 36 30
+	   2D 30 30 31 00
+ 00000034 0A 0D 09 44 61	strHeader3	byte	10,13,9,"Date: ",9,"10/24/2015",0
+	   74 65 3A 20 09
+	   31 30 2F 32 34
+	   2F 32 30 31 35
+	   00
+ 00000049 0A 0D 09 4C 61	strHeader4	byte	10,13,9,"Lab: ",9,"Project 3",0
+	   62 3A 20 09 50
+	   72 6F 6A 65 63
+	   74 20 33 00
+ 0000005C 0A 0D 52 6F 77	strSizeAR	byte	10,13,"Rows for array A: ",0 
+	   73 20 66 6F 72
+	   20 61 72 72 61
+	   79 20 41 3A 20
+	   00
+ 00000071 0A 0D 43 6F 6C	strSizeAC	byte	10,13,"Cols for array A: ",0
+	   73 20 66 6F 72
+	   20 61 72 72 61
+	   79 20 41 3A 20
+	   00
+ 00000086 0A 0D 52 6F 77	strSizeBR	byte	10,13,"Rows for array B: ",0
+	   73 20 66 6F 72
+	   20 61 72 72 61
+	   79 20 42 3A 20
+	   00
+ 0000009B 0A 0D 43 6F 6C	strSizeBC	byte	10,13,"Cols for array B: ",0
+	   73 20 66 6F 72
+	   20 61 72 72 61
+	   79 20 42 3A 20
+	   00
+ 000000B0 0A 0D 49 66 20	strPrompt	byte	10,13,"If finished, just press enter, otherwise type",0
+	   66 69 6E 69 73
+	   68 65 64 2C 20
+	   6A 75 73 74 20
+	   70 72 65 73 73
+	   20 65 6E 74 65
+	   72 2C 20 6F 74
+	   68 65 72 77 69
+	   73 65 20 74 79
+	   70 65 00
+ 000000E0 0A 0D 2A 2A 2A	strErrSize	byte	10,13,"*** Error - Columns for A must = Rows for B ***",0
+	   20 45 72 72 6F
+	   72 20 2D 20 43
+	   6F 6C 75 6D 6E
+	   73 20 66 6F 72
+	   20 41 20 6D 75
+	   73 74 20 3D 20
+	   52 6F 77 73 20
+	   66 6F 72 20 42
+	   20 2A 2A 2A 00
+ 00000112 0A 0D 45 6E 74	strEnterA	byte	10,13,"Enter    values for array A seperated by a space (in row order)",0
+	   65 72 20 20 20
+	   20 76 61 6C 75
+	   65 73 20 66 6F
+	   72 20 61 72 72
+	   61 79 20 41 20
+	   73 65 70 65 72
+	   61 74 65 64 20
+	   62 79 20 61 20
+	   73 70 61 63 65
+	   20 28 69 6E 20
+	   72 6F 77 20 6F
+	   72 64 65 72 29
+	   00
+ 00000154 0A 0D 45 6E 74	strEnterB	byte	10,13,"Enter    values for array B seperated by a space (in row order)",0
+	   65 72 20 20 20
+	   20 76 61 6C 75
+	   65 73 20 66 6F
+	   72 20 61 72 72
+	   61 79 20 42 20
+	   73 65 70 65 72
+	   61 74 65 64 20
+	   62 79 20 61 20
+	   73 70 61 63 65
+	   20 28 69 6E 20
+	   72 6F 77 20 6F
+	   72 64 65 72 29
+	   00
+ 00000196 0A 0D 41 72 72	strArrayA	byte	10,13,"Array A is described below:",0
+	   61 79 20 41 20
+	   69 73 20 64 65
+	   73 63 72 69 62
+	   65 64 20 62 65
+	   6C 6F 77 3A 00
+ 000001B4 0A 0D 41 72 72	strArrayB	byte	10,13,"Array B is described below:",0
+	   61 79 20 42 20
+	   69 73 20 64 65
+	   73 63 72 69 62
+	   65 64 20 62 65
+	   6C 6F 77 3A 00
+ 000001D2 0A 0D 54 68 65	strSum		byte	10,13,"The sum total for all the elements in this array is ",0
+	   20 73 75 6D 20
+	   74 6F 74 61 6C
+	   20 66 6F 72 20
+	   61 6C 6C 20 74
+	   68 65 20 65 6C
+	   65 6D 65 6E 74
+	   73 20 69 6E 20
+	   74 68 69 73 20
+	   61 72 72 61 79
+	   20 69 73 20 00
+ 00000209 0A 0D 54 68 65	strSmall	byte	10,13,"The smallest value in this array is ",0
+	   20 73 6D 61 6C
+	   6C 65 73 74 20
+	   76 61 6C 75 65
+	   20 69 6E 20 74
+	   68 69 73 20 61
+	   72 72 61 79 20
+	   69 73 20 00
+ 00000230 0A 0D 54 68 65	strProduct	byte	10,13,"The product of the arrays is described below:",0
+	   20 70 72 6F 64
+	   75 63 74 20 6F
+	   66 20 74 68 65
+	   20 61 72 72 61
+	   79 73 20 69 73
+	   20 64 65 73 63
+	   72 69 62 65 64
+	   20 62 65 6C 6F
+	   77 3A 00
+ 00000260 0A 0D 00		strBlnkLine	byte	10,13,0
+ 00000263  000001F5 [		strTempHold	byte	501 dup(?)						;temporarily holds the value the user enters
+	    00
+	   ]
+ 00000458 00000000		dSizeAC		dword	?
+ 0000045C 00000000		dSizeAR		dword	?
+ 00000460 00000000		dSizeBC		dword	?
+ 00000464 00000000		dSizeBR		dword	?
+ 00000468  00000014 [		dArrayA		dword	20 dup(?)
+	    00000000
+	   ]
+ 000004B8  00000014 [		dArrayB		dword	20 dup(?)
+	    00000000
+	   ]
+ 00000508  00000014 [		dMulArray	dword	20 dup(?)
+	    00000000
+	   ]
+ 00000558 00000000		dSizeA		dword	?
+ 0000055C 00000000		dSizeB		dword	?
+ 00000560 00000000		dResult		dword	?
+					
+ 00000000				.code
+ 00000000			_start:
+ 00000000  B8 00000000			mov eax,0								;used to stop the debugger
+					
+					INVOKE putstring, ADDR strHeader1		;tells the user who wrote the program
+					INVOKE putstring, ADDR strHeader2		;tells the user the class the program was written for
+					INVOKE putstring, ADDR strHeader3		;tells the user when the program was written
+					INVOKE putstring, ADDR strHeader4		;tells the user the lab number
+					
+ 0000002D  EB 0C			JMP getSizes							;to skip sizeError
+					
+ 0000002F			sizeError:
+					INVOKE putstring, ADDR strErrSize		;tell user what went wrong
+ 00000039  EB 00			JMP getSizes							;go back and try again
+					
+ 0000003B			getSizes:
+					INVOKE putstring, ADDR strSizeAC		;prompt for a cols
+					INVOKE getstring,ADDR strTempHold, 10	;get a cols
+					INVOKE ascint32,ADDR strTempHold		;turn to ascii
+ 0000005B  A3 00000458 R		MOV dSizeAC, EAX						;store a cols
+					INVOKE putstring, ADDR strSizeAR
+					INVOKE getstring,ADDR strTempHold, 10
+					INVOKE ascint32,ADDR strTempHold
+ 00000080  A3 0000045C R		MOV dSizeAR, EAX
+					INVOKE putstring, ADDR strSizeBC
+					INVOKE getstring,ADDR strTempHold, 10
+					INVOKE ascint32,ADDR strTempHold
+ 000000A5  A3 00000460 R		MOV dSizeBC, EAX
+					INVOKE putstring, ADDR strSizeBR
+					INVOKE getstring,ADDR strTempHold, 10
+					INVOKE ascint32,ADDR strTempHold
+ 000000CA  A3 00000464 R		MOV dSizeBR, EAX
+ 000000CF  39 05 00000458 R		CMP dSizeAC, EAX
+ 000000D5  0F 85 FFFFFF54		JNE sizeError
+ 000000DB  F7 2D 00000460 R		IMUL dSizeBC
+ 000000E1  A3 0000055C R		MOV dSizeB,EAX
+ 000000E6  A1 00000458 R		MOV EAX,dSizeAC
+ 000000EB  F7 2D 0000045C R		IMUL dSizeAR
+ 000000F1  A3 00000558 R		MOV dSizeA,EAX
+
+ 000000F6			addNumbersA:	
+					INVOKE intasc32, ADDR strTempHold,dSizeA
+ 00000106  A0 00000263 R		MOV AL, strTempHold
+ 0000010B  A2 0000011A R		MOV strEnterA[8], AL
+ 00000110  A0 00000264 R		MOV AL, strTempHold[1]
+ 00000115  3C 00			CMP AL,0
+ 00000117  75 25			JNE addSecondA
+					
+ 00000119			addNumbersB:	
+					INVOKE intasc32,ADDR strTempHold,dSizeB
+ 00000129  A0 00000263 R		MOV AL, strTempHold
+ 0000012E  A2 0000015C R		MOV strEnterB[8], AL
+ 00000133  A0 00000264 R		MOV AL, strTempHold[1]
+ 00000138  3C 00			CMP AL,0
+ 0000013A  75 02			JNE addSecondA
+ 0000013C  EB 0C			JMP displayMatrix
+					
+ 0000013E			addSecondA:
+ 0000013E  A2 0000011B R		MOV strEnterA[9], AL
+ 00000143  EB D4			JMP addNumbersB
+
+ 00000145			addSecondB:
+ 00000145  A2 0000015D R		MOV strEnterB[9],AL
+					
+ 0000014A			displayMatrix:	
+					INVOKE putstring,ADDR strEnterA
+					INVOKE putstring,ADDR strBlnkLine
+					INVOKE getstring,ADDR strTempHold, 50
+					
+ 0000016A  68 00000263 R		PUSH OFFSET strTempHold
+ 0000016F  68 00000468 R		PUSH OFFSET dArrayA
+ 00000174  E8 00000000 E		CALL extractDwords
+ 00000179  83 C4 08			ADD ESP, 8
+					
+					INVOKE putstring,ADDR strEnterB
+					INVOKE putstring,ADDR strBlnkLine
+					INVOKE getstring,ADDR strTempHold, 50
+					
+ 0000019C  68 00000263 R		PUSH OFFSET strTempHold
+ 000001A1  68 000004B8 R		PUSH OFFSET dArrayB
+ 000001A6  E8 00000000 E		CALL extractDwords
+ 000001AB  83 C4 08			ADD ESP, 8
+					
+					INVOKE putstring,ADDR strArrayA
+					INVOKE putstring,ADDR strBlnkLine
+ 000001C2  68 00000263 R		PUSH OFFSET strTempHold
+ 000001C7  FF 35 00000458 R		PUSH dSizeAC
+ 000001CD  FF 35 0000045C R		PUSH dSizeAR
+ 000001D3  68 00000468 R		PUSH OFFSET dArrayA
+ 000001D8  E8 00000000 E		CALL displayArray
+ 000001DD  83 C4 10			ADD ESP,16
+					
+ 000001E0  FF 35 00000458 R		PUSH dSizeAC
+ 000001E6  FF 35 0000045C R		PUSH dSizeAR
+ 000001EC  68 00000468 R		PUSH OFFSET dArrayA
+ 000001F1  E8 00000000 E		CALL sumUpArray
+ 000001F6  83 C4 0C			ADD ESP, 12
+ 000001F9  A3 00000560 R		MOV dResult, EAX
+					INVOKE putstring,ADDR strSum
+					INVOKE intasc32,ADDR strTempHold,dResult
+					INVOKE putstring,ADDR strTempHold
+					
+ 00000222  FF 35 00000458 R		PUSH dSizeAC
+ 00000228  FF 35 0000045C R		PUSH dSizeAR
+ 0000022E  68 00000468 R		PUSH OFFSET dArrayA
+ 00000233  E8 00000000 E		CALL smallestValue
+ 00000238  83 C4 0C			ADD ESP,12
+ 0000023B  A3 00000560 R		MOV dResult, EAX
+					
+					INVOKE intasc32,ADDR strTempHold,dResult
+					INVOKE putstring,ADDR strBlnkLine
+					INVOKE putstring,ADDR strSmall
+					INVOKE putstring,ADDR strTempHold
+					
+					INVOKE putstring,ADDR strBlnkLine
+					INVOKE putstring,ADDR strArrayB
+					INVOKE putstring,ADDR strBlnkLine
+ 0000028C  68 00000263 R		PUSH OFFSET strTempHold
+ 00000291  FF 35 00000460 R		PUSH dSizeBC
+ 00000297  FF 35 00000464 R		PUSH dSizeBR
+ 0000029D  68 000004B8 R		PUSH OFFSET dArrayB
+ 000002A2  E8 00000000 E		CALL displayArray
+ 000002A7  83 C4 10			ADD ESP,16
+
+ 000002AA  FF 35 00000460 R		PUSH dSizeBC
+ 000002B0  FF 35 00000464 R		PUSH dSizeBR
+ 000002B6  68 000004B8 R		PUSH OFFSET dArrayB
+ 000002BB  E8 00000000 E		CALL sumUpArray
+ 000002C0  83 C4 0C			ADD ESP, 12
+ 000002C3  A3 00000560 R		MOV dResult, EAX
+
+					INVOKE putstring,ADDR strSum
+					INVOKE intasc32,ADDR strTempHold,dResult
+					INVOKE putstring,ADDR strTempHold
+ 000002EC  FF 35 00000460 R		PUSH dSizeBC
+ 000002F2  FF 35 00000464 R		PUSH dSizeBR
+ 000002F8  68 000004B8 R		PUSH OFFSET dArrayB
+ 000002FD  E8 00000000 E		CALL smallestValue
+ 00000302  83 C4 0C			ADD ESP,12
+ 00000305  A3 00000560 R		MOV dResult, EAX
+
+					INVOKE intasc32,ADDR strTempHold,dResult
+					INVOKE putstring,ADDR strBlnkLine
+					INVOKE putstring,ADDR strSmall
+					INVOKE putstring,ADDR strTempHold
+					INVOKE putstring,ADDR strBlnkLine
+					
+					INVOKE putstring,ADDR strProduct
+					INVOKE putstring,ADDR strBlnkLine
+ 00000356  68 00000508 R		PUSH OFFSET dMulArray
+ 0000035B  FF 35 00000460 R		PUSH dSizeBC
+ 00000361  68 000004B8 R		PUSH OFFSET dArrayB
+ 00000366  FF 35 00000458 R		PUSH dSizeAC
+ 0000036C  FF 35 0000045C R		PUSH dSizeAR
+ 00000372  68 00000468 R		PUSH OFFSET dArrayA
+ 00000377  E8 00000000 E		CALL multArrays
+ 0000037C  83 C4 18			ADD ESP,24
+					
+ 0000037F  68 00000263 R		PUSH OFFSET strTempHold
+ 00000384  FF 35 00000460 R		PUSH dSizeBC
+ 0000038A  FF 35 0000045C R		PUSH dSizeAR
+ 00000390  68 00000508 R		PUSH OFFSET dMulArray
+ 00000395  E8 00000000 E		call displayArray
+ 0000039A  83 C4 10			ADD ESP,16
+					
+					INVOKE putstring,ADDR strPrompt
+					INVOKE getstring,ADDR strTempHold, 5
+ 000003B3  80 3D 00000263 R		CMP strTempHold,0
+	   00
+ 000003BA  74 05			JE finished
+ 000003BC  E9 FFFFFC3F			JMP _start
+					
+ 000003C1			finished:
+					INVOKE ExitProcess,0
+ 000003C8				PUBLIC _start	
+					END
+Microsoft (R) Macro Assembler Version 6.11		    11/02/15 07:55:16
+proj3.asm						     Symbols 2 - 1
+
+
+
+
+Segments and Groups:
+
+                N a m e                 Size     Length   Align   Combine Class
+
+FLAT . . . . . . . . . . . . . .	GROUP
+STACK  . . . . . . . . . . . . .	32 Bit	 00000100 DWord	  Stack	  'STACK'	 
+_DATA  . . . . . . . . . . . . .	32 Bit	 00000564 DWord	  Public  'DATA'	
+_TEXT  . . . . . . . . . . . . .	32 Bit	 000003C8 DWord	  Public  'CODE'	
+
+
+Procedures,  parameters and locals:
+
+                N a m e                 Type     Value    Attr
+
+$$$$$$00001  . . . . . . . . . .	P Near	 00000000 _TEXT	Length= 000003C8 Private
+  sizeError  . . . . . . . . . .	L Near	 0000002F _TEXT	
+  getSizes . . . . . . . . . . .	L Near	 0000003B _TEXT	
+  addNumbersA  . . . . . . . . .	L Near	 000000F6 _TEXT	
+  addNumbersB  . . . . . . . . .	L Near	 00000119 _TEXT	
+  addSecondA . . . . . . . . . .	L Near	 0000013E _TEXT	
+  addSecondB . . . . . . . . . .	L Near	 00000145 _TEXT	
+  displayMatrix  . . . . . . . .	L Near	 0000014A _TEXT	
+  finished . . . . . . . . . . .	L Near	 000003C1 _TEXT	
+ExitProcess  . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
+ascint32 . . . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
+getche . . . . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
+getch  . . . . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
+getstring  . . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
+intasc32 . . . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
+putch  . . . . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
+putstring  . . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
+
+
+Symbols:
+
+                N a m e                 Type     Value    Attr
+
+@CodeSize  . . . . . . . . . . .	Number	 00000000h   
+@DataSize  . . . . . . . . . . .	Number	 00000000h   
+@Interface . . . . . . . . . . .	Number	 00000000h   
+@Model . . . . . . . . . . . . .	Number	 00000007h   
+@code  . . . . . . . . . . . . .	Text   	 _TEXT
+@data  . . . . . . . . . . . . .	Text   	 FLAT
+@fardata?  . . . . . . . . . . .	Text   	 FLAT
+@fardata . . . . . . . . . . . .	Text   	 FLAT
+@stack . . . . . . . . . . . . .	Text   	 FLAT
+_start . . . . . . . . . . . . .	L Near	 00000000 _TEXT	Public
+addNumbersA  . . . . . . . . . .	L Near	 000000F6 _TEXT	
+addNumbersB  . . . . . . . . . .	L Near	 00000119 _TEXT	
+addSecondA . . . . . . . . . . .	L Near	 0000013E _TEXT	
+addSecondB . . . . . . . . . . .	L Near	 00000145 _TEXT	
+dArrayA  . . . . . . . . . . . .	DWord	 00000468 _DATA	
+dArrayB  . . . . . . . . . . . .	DWord	 000004B8 _DATA	
+dMulArray  . . . . . . . . . . .	DWord	 00000508 _DATA	
+dResult  . . . . . . . . . . . .	DWord	 00000560 _DATA	
+dSizeAC  . . . . . . . . . . . .	DWord	 00000458 _DATA	
+dSizeAR  . . . . . . . . . . . .	DWord	 0000045C _DATA	
+dSizeA . . . . . . . . . . . . .	DWord	 00000558 _DATA	
+dSizeBC  . . . . . . . . . . . .	DWord	 00000460 _DATA	
+dSizeBR  . . . . . . . . . . . .	DWord	 00000464 _DATA	
+dSizeB . . . . . . . . . . . . .	DWord	 0000055C _DATA	
+displayArray . . . . . . . . . .	L Near	 00000000 FLAT	External
+displayMatrix  . . . . . . . . .	L Near	 0000014A _TEXT	
+extractDwords  . . . . . . . . .	L Near	 00000000 FLAT	External
+finished . . . . . . . . . . . .	L Near	 000003C1 _TEXT	
+getSizes . . . . . . . . . . . .	L Near	 0000003B _TEXT	
+multArrays . . . . . . . . . . .	L Near	 00000000 FLAT	External
+sizeError  . . . . . . . . . . .	L Near	 0000002F _TEXT	
+smallestValue  . . . . . . . . .	L Near	 00000000 FLAT	External
+strArrayA  . . . . . . . . . . .	Byte	 00000196 _DATA	
+strArrayB  . . . . . . . . . . .	Byte	 000001B4 _DATA	
+strBlnkLine  . . . . . . . . . .	Byte	 00000260 _DATA	
+strEnterA  . . . . . . . . . . .	Byte	 00000112 _DATA	
+strEnterB  . . . . . . . . . . .	Byte	 00000154 _DATA	
+strErrSize . . . . . . . . . . .	Byte	 000000E0 _DATA	
+strHeader1 . . . . . . . . . . .	Byte	 00000000 _DATA	
+strHeader2 . . . . . . . . . . .	Byte	 0000001B _DATA	
+strHeader3 . . . . . . . . . . .	Byte	 00000034 _DATA	
+strHeader4 . . . . . . . . . . .	Byte	 00000049 _DATA	
+strProduct . . . . . . . . . . .	Byte	 00000230 _DATA	
+strPrompt  . . . . . . . . . . .	Byte	 000000B0 _DATA	
+strSizeAC  . . . . . . . . . . .	Byte	 00000071 _DATA	
+strSizeAR  . . . . . . . . . . .	Byte	 0000005C _DATA	
+strSizeBC  . . . . . . . . . . .	Byte	 0000009B _DATA	
+strSizeBR  . . . . . . . . . . .	Byte	 00000086 _DATA	
+strSmall . . . . . . . . . . . .	Byte	 00000209 _DATA	
+strSum . . . . . . . . . . . . .	Byte	 000001D2 _DATA	
+strTempHold  . . . . . . . . . .	Byte	 00000263 _DATA	
+sumUpArray . . . . . . . . . . .	L Near	 00000000 FLAT	External
+
+	   0 Warnings
+	   0 Errors

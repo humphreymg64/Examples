@@ -1,0 +1,11 @@
+Summon Friendly Animal|1d5
+Summon Gremlin|1d1
+Summon Booster|1d1
+Summon Modo|1d1
+Summon Health Sprite|1d1
+Summon Devil|1d1
+Summon Fish|1d1
+Summon Bogeyman|1d1
+Clone|1d1
+Summon Sniffer|1d1
+Summon Beast|1d1

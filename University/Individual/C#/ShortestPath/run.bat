@@ -1,0 +1,1 @@
+.\bin\Release\Project1MatthewHumphrey.exe <.\Data\Points.txt >.\Data\results.txt

@@ -1,0 +1,24 @@
+Damage Nerf|1d4
+Health Nerf|1d10
+Con Nerf|1d4
+Str Nerf|1d4
+Dex Nerf|1d4
+Int Nerf|1d4
+Wis Nerf|1d4
+Cha Nerf|1d4
+Spot Nerf|1d4
+Sneak Nerf|1d4
+Speed Nerf|1d4
+Combat Nerf|1d8
+Life Drain|1d5
+Summon Modo|1d1
+Freeze|1d3
+Burn|1d3
+Stun|1d3
+Sleep|1d3
+Poison|1d3
+Hallucinate|1d3
+Fear|1d3
+Transform|1d5
+Petrify
+Slow|1d3

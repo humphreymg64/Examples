@@ -1,0 +1,6 @@
+c:\users\matthew\documents\visual studio 2015\Projects\OpsPerSecond\bin\Debug\OpsPerSecond.exe.config
+c:\users\matthew\documents\visual studio 2015\Projects\OpsPerSecond\bin\Debug\OpsPerSecond.exe
+c:\users\matthew\documents\visual studio 2015\Projects\OpsPerSecond\bin\Debug\OpsPerSecond.pdb
+c:\users\matthew\documents\visual studio 2015\Projects\OpsPerSecond\obj\Debug\OpsPerSecond.csprojResolveAssemblyReference.cache
+c:\users\matthew\documents\visual studio 2015\Projects\OpsPerSecond\obj\Debug\OpsPerSecond.exe
+c:\users\matthew\documents\visual studio 2015\Projects\OpsPerSecond\obj\Debug\OpsPerSecond.pdb

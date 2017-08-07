@@ -1,0 +1,21 @@
+Damage Boost|1d4
+Health Boost|1d10
+Con Boost|1d4
+Str Boost|1d4
+Dex Boost|1d4
+Int Boost|1d4
+Wis Boost|1d4
+Cha Boost|1d4
+Spot Boost|1d4
+Sneak Boost|1d4
+Speed Boost|1d4
+Combat Boost|1d8
+Summon Booster|1d1
+Float|1d3
+Grow|1d8
+Transform|1d5
+Speed Up|1d3
+Sheild|1d5
+Battle Fever|1d3
+Invisible|1d4
+Regen|1d3

@@ -1,0 +1,14 @@
+Water Fountain|1d4
+Magical Game|1d5
+Vision of Terror|1d4
+Happy Beam|1d3
+Dream Vision|1d6
+Minor Foresight|1d5
+Firework Display|1d6
+Transform|1d8
+Materialize Food|1d7
+Spook|1d8
+Float Oject|1d9
+Summon Friendly Animal|1d5
+Substitiute|1d6
+Switch Places|1d5

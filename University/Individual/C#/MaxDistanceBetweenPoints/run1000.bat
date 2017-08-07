@@ -1,0 +1,1 @@
+.\bin\Release\Project2MatthewHumphrey.exe <.\test1000.txt >.\result.txt

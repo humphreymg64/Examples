@@ -1,0 +1,1 @@
+C:\Users\Matthew\Desktop\Assembly\MASM2015Fall\link /debug /subsystem:console /entry:start /out:%1.exe %1.obj C:\Users\Matthew\Desktop\Assembly\MASM2015Fall\kernel32.lib C:\Users\Matthew\Desktop\Assembly\MASM2015Fall\utility201503.obj C:\Users\Matthew\Desktop\Assembly\MASM2015Fall\convutil201510.obj C:\Users\Matthew\Desktop\Assembly\proj3\proj3methods.obj

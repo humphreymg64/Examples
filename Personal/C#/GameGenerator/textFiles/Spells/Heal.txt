@@ -1,0 +1,8 @@
+Patch Wounds|1d3
+Minor Heal|1d6
+Fix Status|1d1
+Cure Poison|1d1
+Major Heal|1d10
+Heal|1d7
+Revive|1d3
+Summon Health Sprite|1d1

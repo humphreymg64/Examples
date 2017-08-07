@@ -1,0 +1,17 @@
+Monster|Description|Size|Danger|Item(%Chance)|Values in gold
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Jar Imp|An imp in a jar that will serve whomever imprisoned it.|2'6"|3||
+Gargoyle|A statue brought to life through magic.|5'11"|4||
+Devil Hand| A green arm-shaped creature with four clawed hands on the end. Ocassionally wander out of the crag at night to steal things or strangle people.|1'0"|1|Gold Ring(5),[Magic] Ring(1),[CheapWeapon](7),Glove(7),[Metal] Ring(5)|20,40,3,0.5,5
+Skeleton|A walking skeleton that has long since forgot why it fights.|5'9"|4|Copper Spear(80),Copper Helmet(40)|5,0.2
+[Color] Will O' Wisp|A ghostlight that leads down the wrong way.|0'5"|1||
+Flat-Topped Mushroom Man|A large mushroom-shaped humanoid with a powerful body.|6'6"|4|[Color] Mushroom(20)|5
+Demon Rat|A large three-eyed rat that tunneled its way from the underworld.|2'3"|3|[Magic] Scroll(5)|30
+Iron Man|A man made from raw iron.|6'0"|5|Iron Ore(100),Iron Ore(30)|30,30
+Quartz Man|A man made from carved quartz stone.|6'0"|5|Quartz Rock(10)|10
+Gold Man|A man made from raw gold.|6'0"|5|Gold Ore(100),Gold Ore(30)|60,60
+Salt Man|A man made from raw salt. Reforms when cut.|7'0"|4|Salt Stone(30)|20
+Flying Eye|An eye that watches for the witch.|1'9"|1||
+Hair Beast|A beast so covered in hair that its shape cannot be determined.|6'0"|3||
+Void Cat|A cat with stars in its eyes that can teleport.|1'5"|2||
+Blade Ghost|A ghost that holds a blade|6'0"|4|Copper Sword(96)|0.8

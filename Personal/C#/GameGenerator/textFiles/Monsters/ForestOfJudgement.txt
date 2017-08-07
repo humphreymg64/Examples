@@ -1,0 +1,13 @@
+Monster|Description|Size|Danger|Item(%Chance)|Values in gold
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Slenshi Spawn|A huge purple spider that hunts near the crag at night.|5'5"|4||
+Small Slenshi Spawn|A large purple spider that hunts near the crag at night.|3'5"|2||
+Bandit|A violent humanoid after your money.|6'2"|4|Copper Dagger(95),Copper Sword(50),Coat(40),Copper Helmet(10)|0.5,0.8,0.1,0.2
+Bandit|A violent humanoid after your money.|6'2"|4|Copper Dagger(95),Copper Axe(50),Coat(40),Copper Helmet(10)|0.5,0.8,0.1,0.2
+Bandit|A violent humanoid after your money.|6'2"|4|Copper Dagger(95),Bow(50),20 Arrows(75),Coat(40),Copper Helmet(10)|0.5,0.5,0.02,0.1,0.2
+Bandit|A violent humanoid after your money.|6'2"|4|Copper Dagger(95),Magic Staff(50),Coat(40),Copper Helmet(10)|0.5,0.8,0.1,0.2
+Wild Man of The Woods|A strange wild man living in the woods.|5'5"|5|Carved Wood Staff(80),Wood Bird Talisman(10)|0.05,0.01
+Land Squid|A round squid like creature that runs very quickly and likes to steal.|2'0"|2|Tentacles(80)|0.03
+Big Wolf|A large black wolf.|3'0"|4||
+[Color] Flowerman|A giant walking flower|5'5"|3||
+Terror Bird|A giant ostrich like bird with huge talons to rip up prey.|6'6"|4||

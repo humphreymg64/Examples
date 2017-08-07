@@ -1,0 +1,10 @@
+Highlight Traps|1d1
+Set off Traps|1d1
+Enhance Vision|1d5
+Spot Nearest Trap|1d1
+Spot Nearest Treasure|1d1
+Summon Sniffer|1d1
+Sense Enemy|1d1
+Sense Treasure|1d1
+Sense Key|1d1
+Light|1d1

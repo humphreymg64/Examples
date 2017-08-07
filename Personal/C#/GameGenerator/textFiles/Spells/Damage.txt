@@ -1,0 +1,40 @@
+Fireball|1d8
+Icy WInd|1d8
+Mega Shocker|1d8
+Meteor Swing|1d8
+Decompose|1d8
+Summon Goblins|1d8
+Burst|1d8
+Gust Blast|1d8
+Compress|1d8
+Red Lightning|1d6
+Vine Eater|1d6
+Poison Breath|1d6
+Little Bang Attack|1d6
+Spirit Needle|1d6
+World Destroyer|1d12
+Dark Shot|1d6
+Concert Crunch|1d4
+Flame Inferno|1d10
+Super Ice Blast|1d8
+Burst Bubble|1d4
+Fist of the Spirit King|1d12
+Hand of Truth|1d6
+Celestial Shot|1d7
+Flame Rocket|1d6
+Blue Thunder|1d7
+Superitron Laser|1d14
+Burning Feet of Fire|1d5
+Blue Lightning|1d6
+Red Blaze|1d8
+Thunder Ball|1d7
+Blast of Cold Fire|1d5
+Antielectron Laser|1d11
+Pressure|1d5
+Candy Beam|1d10
+Freeze|1d4
+Refractor Beam|1d8
+Mystic Ray|1d8
+Bone Blast|1d8
+Summon Beast|1d1
+Teleport Object Away|1d12

@@ -1,0 +1,12 @@
+Monster|Description|Size|Danger|Item(%Chance)|Values in gold
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Cave Crawler|Brown furry monsters with four harvestmen-like legs that can bend backwards with hands at the end. Their fur is of moderate value. |4'9"|3|Crawler Fur(70),Crawler Fangs(50),Crawler Hand(20),Crawler Hand(20),Crawler Hand(20),Crawler Hand(20)|5,0.1,0.05,0.05,,0.05,0.05
+Slenshi Spawn|A huge purple spider that hunts near the crag at night.|5'5"|4||
+Small Slenshi Spawn|A large purple spider that hunts near the crag at night.|6'5"|2||
+Giant Slenshi Spawn|A giant purple spider that hunts near the crag at night.|7'5"|6||
+Devil Hand| A green arm-shaped creature with four clawed hands on the end. Ocassionally wander out of the crag at night to steal things or strangle people.|1'0"|1|Gold Ring(5),[Magic] Ring(1),[CheapWeapon](7),Glove(7),[Metal] Ring(5)|20,40,3,0.5,5
+Swarming Bats|A large group of bats that move together to destroy anything in their path|4'4"|3||
+Banshee Monkey|A small white eyeless monkey that screeches to attact monsters.|3'3"|2||
+Mountain King Isopod|A gaint isopod that lives deep underground. It can bury it self in solid stone to hide.|5'0"|3|Isopod Shell(40)|4
+Crawling Head|A human-like head that crawls around on dozens of tendrils where the neck should be. They have been known to cast spells|1'0"|1|Copper Helmet(3)|0.2
+Skeleton|A walking skeleton that has long since forgot why it fights.|5'9"|3|Stone Axe(80),Copper Helmet(40),Spider Shaped Gold Charm(5)|0.03,0.2,10

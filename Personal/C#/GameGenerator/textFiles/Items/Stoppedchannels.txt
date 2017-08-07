@@ -1,0 +1,21 @@
+Monster|Description|Size|Danger|Item(%Chance)|Values in gold
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Demon Bone Blade|2|50
+Demon Horn Blade|2|30
+Demon Charm|2|10
+Iron Dagger|4|10
+Silver Stone|1|30
+Magic Scroll|3|40
+Copper Sword|6|0.8
+Copper Axe|6|0.8
+Bow|5|0.5
+20 Arrows|4|0.02
+Copper Dagger|6|0.5
+Coat|8|0.1
+Copper Helmet|2|0.2
+Gold Ring|1|20
+[Magic] Ring|1|40
+Glove|5|3
+[Metal] Ring|2|5
+[Color] Mushroom|2|5
+[Magic] Scroll|3|30

@@ -1,0 +1,184 @@
+Microsoft (R) Macro Assembler Version 6.11		    09/29/15 21:13:32
+Proj1MGH.asm						     Page 1 - 1
+
+
+				;*************************************************************************************
+				; Program Name:  Proj1MGH.asm
+				; Programmer:    Matthew Garret Humphrey
+				; Class:         CSCI 2160
+				; Date:          September 29, 2015
+				; Purpose: Add together and display the sum of a user defined number of variables
+				;
+				;************************************************************************************* 
+					.486
+					.model flat
+					.stack 100h 
+					
+					ExitProcess PROTO Near32 stdcall, dwExitCode:dword 
+					ascint32	PROTO Near32 stdcall, lpStringHolding:dword 
+					intasc32	PROTO Near32 stdcall, lpStringToHold:dword, dVal:dword 
+					getstring	PROTO Near32 stdcall, lpStringToHold:dword, dNumChars:dword 
+					putstring	PROTO Near32 stdcall, lpStringToDisplay:dword 
+					
+ 00000000				.data 
+ 00000000 0A 0D 09 4E 61	strHeader1	byte	10,13,9,"Name: ",9,"Matthew Humphrey",0
+	   6D 65 3A 20 09
+	   4D 61 74 74 68
+	   65 77 20 48 75
+	   6D 70 68 72 65
+	   79 00
+ 0000001B 0A 0D 09 43 6C	strHeader2	byte	10,13,9,"Class: ",9,"CSCI 2160-001",0
+	   61 73 73 3A 20
+	   09 43 53 43 49
+	   20 32 31 36 30
+	   2D 30 30 31 00
+ 00000034 0A 0D 09 44 61	strHeader3	byte	10,13,9,"Date: ",9,"9/28/2015",0
+	   74 65 3A 20 09
+	   39 2F 32 38 2F
+	   32 30 31 35 00
+ 00000048 0A 0D 09 4C 61	strHeader4	byte	10,13,9,"Lab: ",9,"Project 1",0
+	   62 3A 20 09 50
+	   72 6F 6A 65 63
+	   74 20 31 00
+ 0000005B 0A 0D 09 48 6F	strPromptAmt	byte	10,13,9,"How many numbers would you like to enter: ",0 
+	   77 20 6D 61 6E
+	   79 20 6E 75 6D
+	   62 65 72 73 20
+	   77 6F 75 6C 64
+	   20 79 6F 75 20
+	   6C 69 6B 65 20
+	   74 6F 20 65 6E
+	   74 65 72 3A 20
+	   00
+ 00000089 0A 0D 09 45 6E	strPromptNum	byte	10,13,9,"Enter a number: ",0
+	   74 65 72 20 61
+	   20 6E 75 6D 62
+	   65 72 3A 20 00
+ 0000009D 0A 0D 09 54 68	strAnswer	byte		10,13,9,"The sum of these numbers is ",0
+	   65 20 73 75 6D
+	   20 6F 66 20 74
+	   68 65 73 65 20
+	   6E 75 6D 62 65
+	   72 73 20 69 73
+	   20 00
+ 000000BD 0A 0D 09 50 72	strPressEnter	byte	10,13,9,"Press enter to exit",0
+	   65 73 73 20 65
+	   6E 74 65 72 20
+	   74 6F 20 65 78
+	   69 74 00
+ 000000D4 0A 0D 00		strBlankLn	byte		10,13,0
+ 000000D7 00			strDummy	byte	?						;used to be a dummy so that a the program will wait for an enter
+ 000000D8 00			strNum		byte	?						;needed to hold the numbers the user will enter
+ 000000D9 00			strAmount	byte	?						;needed to hold the amount the user wants to enter
+ 000000DA  0000000B [		strSum		byte	11 dup(?)				;needed to display the sum
+	    00
+	   ]
+ 000000E5 00000000		dSum		dword	?						;needed so that the sum can be displayed
+ 000000E9 00000000		dAmount		dword	?						;needed for the looping process, what strAmount converts to
+ 000000ED  00000065 [		dNums		dword	101 dup(?)				;needed to hold the numbers the user enters 
+	    00000000
+	   ]
+
+ 00000000				.code
+ 00000000			_start:
+ 00000000  66| B8 0000				MOV	ax,0							;instruction used to stop the debugger
+						INVOKE putstring, ADDR strHeader1	;tells the user who wrote the program
+						INVOKE putstring, ADDR strHeader2	;tells the user the class the program was written for
+						INVOKE putstring, ADDR strHeader3	;tells the user when the program was written
+						INVOKE putstring, ADDR strHeader4	;tells the user the lab number
+						INVOKE putstring, ADDR strBlankLn	;makes the information look more organized
+						INVOKE putstring, ADDR strPromptAmt	;asks the user for the amount of numbers to enter
+						INVOKE getstring, ADDR strAmount,2	;used to determine how many numbers the user will enter
+
+						INVOKE ascint32, ADDR strAmount		;so that the amount the user entered can be put into ECX for looping
+ 00000056  A3 000000E9 R			MOV dAmount, EAX					;so that bAmount has the number in it
+ 0000005B  8B 0D 000000E9 R			MOV ECX, dAmount					;so that the following loop will go through the user defined amount of times
+ 00000061  BB 00000000				MOV EBX, 0							;makes sure that the EBX register is empty
+						
+ 00000066			stLoopNums:									;used for the user to enter each new number
+ 00000066  C6 05 000000D8 R			MOV strNum, 0						;used to clear strNum every time
+	   00
+						INVOKE putstring, ADDR strPromptNum	;used so that the user knows to enter a number
+						INVOKE getstring, ADDR strNum,3						;used to put each number the user enters into strNums
+						INVOKE ascint32, ADDR strNum						;so that they can be added together	
+ 0000008D  89 04 8D				MOV	dAmount[ECX*4], EAX				;so that bAmount has the number in it
+	   000000E9 R
+ 00000094  03 1C 8D				ADD EBX,dAmount[ECX*4]				;used to sum up the numbers
+	   000000E9 R
+ 0000009B  E2 C9			LOOP stLoopNums							;so that the program will loop
+						
+ 0000009D  89 1D 000000E5 R			MOV dSum, EBX						;so that the sum will be in dSum
+						INVOKE intasc32, ADDR strSum, dSum	;so that the sum is a string which can be displayed
+						INVOKE putstring, ADDR strAnswer	;so that the user knows what the amount displayed means
+						INVOKE putstring, ADDR strSum		;so that the sum is displayed
+
+						INVOKE putstring, ADDR strPressEnter;so that the user knows to press enter
+						INVOKE getstring, ADDR strDummy,0	;so that the program will wait for the user to press enter
+						
+						INVOKE ExitProcess, 0
+ 000000E4					Public _start
+						
+						end
+Microsoft (R) Macro Assembler Version 6.11		    09/29/15 21:13:32
+Proj1MGH.asm						     Symbols 2 - 1
+
+
+
+
+Segments and Groups:
+
+                N a m e                 Size     Length   Align   Combine Class
+
+FLAT . . . . . . . . . . . . . .	GROUP
+STACK  . . . . . . . . . . . . .	32 Bit	 00000100 DWord	  Stack	  'STACK'	 
+_DATA  . . . . . . . . . . . . .	32 Bit	 00000281 DWord	  Public  'DATA'	
+_TEXT  . . . . . . . . . . . . .	32 Bit	 000000E4 DWord	  Public  'CODE'	
+
+
+Procedures,  parameters and locals:
+
+                N a m e                 Type     Value    Attr
+
+$$$$$$00001  . . . . . . . . . .	P Near	 00000000 _TEXT	Length= 000000E4 Private
+  stLoopNums . . . . . . . . . .	L Near	 00000066 _TEXT	
+ExitProcess  . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
+ascint32 . . . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
+getstring  . . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
+intasc32 . . . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
+putstring  . . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
+
+
+Symbols:
+
+                N a m e                 Type     Value    Attr
+
+@CodeSize  . . . . . . . . . . .	Number	 00000000h   
+@DataSize  . . . . . . . . . . .	Number	 00000000h   
+@Interface . . . . . . . . . . .	Number	 00000000h   
+@Model . . . . . . . . . . . . .	Number	 00000007h   
+@code  . . . . . . . . . . . . .	Text   	 _TEXT
+@data  . . . . . . . . . . . . .	Text   	 FLAT
+@fardata?  . . . . . . . . . . .	Text   	 FLAT
+@fardata . . . . . . . . . . . .	Text   	 FLAT
+@stack . . . . . . . . . . . . .	Text   	 FLAT
+_start . . . . . . . . . . . . .	L Near	 00000000 _TEXT	Public
+dAmount  . . . . . . . . . . . .	DWord	 000000E9 _DATA	
+dNums  . . . . . . . . . . . . .	DWord	 000000ED _DATA	
+dSum . . . . . . . . . . . . . .	DWord	 000000E5 _DATA	
+stLoopNums . . . . . . . . . . .	L Near	 00000066 _TEXT	
+strAmount  . . . . . . . . . . .	Byte	 000000D9 _DATA	
+strAnswer  . . . . . . . . . . .	Byte	 0000009D _DATA	
+strBlankLn . . . . . . . . . . .	Byte	 000000D4 _DATA	
+strDummy . . . . . . . . . . . .	Byte	 000000D7 _DATA	
+strHeader1 . . . . . . . . . . .	Byte	 00000000 _DATA	
+strHeader2 . . . . . . . . . . .	Byte	 0000001B _DATA	
+strHeader3 . . . . . . . . . . .	Byte	 00000034 _DATA	
+strHeader4 . . . . . . . . . . .	Byte	 00000048 _DATA	
+strNum . . . . . . . . . . . . .	Byte	 000000D8 _DATA	
+strPressEnter  . . . . . . . . .	Byte	 000000BD _DATA	
+strPromptAmt . . . . . . . . . .	Byte	 0000005B _DATA	
+strPromptNum . . . . . . . . . .	Byte	 00000089 _DATA	
+strSum . . . . . . . . . . . . .	Byte	 000000DA _DATA	
+
+	   0 Warnings
+	   0 Errors

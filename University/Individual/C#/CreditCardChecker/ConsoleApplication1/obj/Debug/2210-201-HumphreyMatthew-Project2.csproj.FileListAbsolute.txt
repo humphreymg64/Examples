@@ -1,0 +1,6 @@
+C:\Users\Matthew\Examples\UniversityProjects\IndividualProjects\C#\2210-201-HumphreyMatthew-Project2\ConsoleApplication1\bin\Debug\ConsoleApplication1.exe.config
+C:\Users\Matthew\Examples\UniversityProjects\IndividualProjects\C#\2210-201-HumphreyMatthew-Project2\ConsoleApplication1\bin\Debug\ConsoleApplication1.exe
+C:\Users\Matthew\Examples\UniversityProjects\IndividualProjects\C#\2210-201-HumphreyMatthew-Project2\ConsoleApplication1\bin\Debug\ConsoleApplication1.pdb
+C:\Users\Matthew\Examples\UniversityProjects\IndividualProjects\C#\2210-201-HumphreyMatthew-Project2\ConsoleApplication1\obj\Debug\2210-201-HumphreyMatthew-Project2.csprojResolveAssemblyReference.cache
+C:\Users\Matthew\Examples\UniversityProjects\IndividualProjects\C#\2210-201-HumphreyMatthew-Project2\ConsoleApplication1\obj\Debug\ConsoleApplication1.exe
+C:\Users\Matthew\Examples\UniversityProjects\IndividualProjects\C#\2210-201-HumphreyMatthew-Project2\ConsoleApplication1\obj\Debug\ConsoleApplication1.pdb

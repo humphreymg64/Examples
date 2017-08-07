@@ -1,0 +1,22 @@
+Item Name|Probability Weight [Max 10]|Value(GGGGGG.SSCC) [G = Gold, S = Silver, C = Copper]
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Gold Ring|1|20
+[Magic] Ring|1|40
+Glove|5|3
+[Metal] Ring|2|5
+[Color] Mushroom|2|5
+[Magic] Scroll|3|30
+Iron Ore|5|30
+Quartz Rock|7|10
+Gold Ore|1|60
+Salt Stone|3|20
+Copper Sword|6|0.8
+Copper Axe|6|0.8
+Copper Spear|6|0.8
+Bow|5|0.5
+20 Arrows|4|0.02
+Copper Dagger|6|0.5
+Magic Staff|1|0.8
+Coat|8|0.1
+Copper Helmet|2|0.2
+Carved Wood Staff|4|0.05

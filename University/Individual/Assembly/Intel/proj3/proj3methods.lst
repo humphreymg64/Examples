@@ -1,0 +1,419 @@
+Microsoft (R) Macro Assembler Version 6.11		    11/02/15 07:55:12
+proj3methods.asm					     Page 1 - 1
+
+
+				Comment#
+				**************************************************************************************
+				 Program Name:  proj3methods.asm
+				 Programmer:    Matthew Garret Humphrey
+				 Class:         CSCI 2160-001
+				 Date:          October 24, 2015
+				 Purpose: 		
+				*************************************************************************************#
+					.486
+					.model flat 
+					
+					ExitProcess PROTO Near32 stdcall, dwExitCode:dword 
+					ascint32	PROTO Near32 stdcall, lpStringHolding:dword 
+					intasc32	PROTO Near32 stdcall, lpStringToHold:dword, dVal:dword 
+					getstring	PROTO Near32 stdcall, lpStringToHold:dword, dNumChars:dword 
+					putstring	PROTO Near32 stdcall, lpStringToDisplay:dword 
+					getche		PROTO Near32 stdcall
+					getch		PROTO Near32 stdcall
+					putch		PROTO Near32 stdcall, bVal:byte	
+					
+ 00000000				.code
+
+ 00000000			extractDwords PROC
+ 00000000  55				PUSH EBP								;to preserve the original EBP
+ 00000001  8B EC			MOV EBP,ESP								;set up for the new stack frame
+ 00000003  50				PUSH EAX								;to preserve the registers that will be used
+ 00000004  53				PUSH EBX								
+ 00000005  51				PUSH ECX
+ 00000006  56				PUSH ESI
+					
+ 00000007  8B 5D 08			MOV EBX, [EBP + 8]						;so ebx will hold the address of the dwords
+ 0000000A  8B 75 0C			MOV ESI, [EBP + 12]						;so esi will hold the address of the string
+ 0000000D  B9 00000000			MOV ECX, 0								;to clear the ecx register
+					
+ 00000012			findNums:
+ 00000012  8A 06			MOV AL, [ESI]							;because memory can't be compared to memory
+ 00000014  3C 00			CMP AL, 0								;tests if the current character is an end of line character
+ 00000016  74 44			JE endOfLine							;if so skip to the end of the method
+ 00000018  8A 06			MOV AL, [ESI]							;because memory can't be compared to memory
+ 0000001A  3C 20			CMP AL, ' '								;tests if the current character is a blank space
+ 0000001C  74 1C			JE addNum								;if so skip to the next character in the string
+ 0000001E  8A 06			MOV AL, [ESI]							;because memory can't be compared to memory
+ 00000020  3C 2C			CMP AL, ','								;tests if the current character is a ,
+ 00000022  74 16			JE addNum								;if so skip to the next character in the string
+ 00000024  8A 06			MOV AL, [ESI]							;because memory can't be compared to memory
+ 00000026  3C 3B			CMP AL, ';'								;tests if the current character is a ;
+ 00000028  74 10			JE addNum								;if so skip to the next character in the string
+ 0000002A  8A 06			MOV AL, [ESI]							;because memory can't be compared to memory
+ 0000002C  3C 3A			CMP AL, ':'								;tests if the current character is a :
+ 0000002E  74 0A			JE addNum								;if so skip to the next character in the string
+ 00000030  8A 06			MOV AL, [ESI]							;because memory can't be compared to memory
+ 00000032  3C 09			CMP AL, 9								;tests if the current character is a tab character
+ 00000034  74 04			JE addNum								;if so skip to the next character in the string
+ 00000036  41				INC ECX									;add one to the length of the current word
+					
+ 00000037			nextChar:
+ 00000037  46				INC ESI									;esi ++
+ 00000038  EB D8			JMP findNums							;jump back
+					
+ 0000003A			addNum:
+ 0000003A  83 F9 00			cmp ECX,0								;check if their last item was a value
+ 0000003D  74 F8			JE nextChar								;if not jump to next
+ 0000003F  B0 00			MOV AL,0								;al = 0
+ 00000041  88 06			MOV [ESI],AL							;[esi] = 0
+ 00000043  8B C6			MOV EAX, ESI							;eax = esi
+ 00000045  2B C1			SUB EAX, ECX							;EAX = ESI - ECX
+					INVOKE ascint32,ADDR [EAX]				;change the last string of numbers to a dword
+ 0000004F  89 03			MOV [EBX],EAX							;[ebx] = eax
+ 00000051  83 C3 04			ADD EBX,4								;ebx += 4
+ 00000054  B9 00000000			MOV ECX, 0								;to clear the ecx register
+ 00000059  46				INC ESI									;esi++
+ 0000005A  EB B6			JMP findNums							;jump back up
+					
+ 0000005C			endOfLine:
+ 0000005C  83 F9 00			CMP ECX,0								;test if the length of the last word was zero
+ 0000005F  75 D9			JNE addNum								;if not jump to a part that adds a number to the dword array
+ 00000061  5E				POP ESI									;restore the registers
+ 00000062  59				POP ECX									;
+ 00000063  5B				POP EBX									;
+ 00000064  58				POP EAX									;
+ 00000065  5D				POP EBP									;
+ 00000066  C3				RET										;the leave and return statement
+ 00000067				extractDwords ENDP
+					
+ 00000067			displayArray PROC
+ 00000067  55				PUSH EBP								;to preserve the original EBP
+ 00000068  8B EC			MOV EBP,ESP								;set up for the new stack frame
+ 0000006A  50				PUSH EAX								;to preserve the registers that will be used
+ 0000006B  53				PUSH EBX								
+ 0000006C  51				PUSH ECX
+ 0000006D  52				PUSH EDX
+ 0000006E  57				PUSH EDI
+ 0000006F  56				PUSH ESI
+					
+ 00000070  8B 5D 08			MOV EBX, [EBP + 8]						;so that ebx will hold the address of the dwords
+ 00000073  8B 75 14			MOV ESI, [EBP + 20]						;so that esi will hold the address of the string to hold
+
+ 00000076  8B 45 10			MOV EAX,[EBP + 16]						;eax = cols
+ 00000079  8B 55 0C			MOV EDX,[EBP + 12]						;edx = rows
+ 0000007C  F7 EA			IMUL EDX								;edx:eax = cols * rows
+ 0000007E  BA 0000000C			MOV EDX,12								;edx = 12; length of dword max value in chars
+ 00000083  F7 EA			IMUL EDX								;edx:eax = cols * rows * 12
+ 00000085  8B C8			MOV ECX,EAX								;ecx = eax
+					
+ 00000087			stClear:
+ 00000087  B0 20			MOV AL," "								;al = " "
+ 00000089  88 06			MOV [ESI],AL							;clear out each space in esi
+ 0000008B  46				INC ESI									;next space
+ 0000008C  E2 F9			LOOP stClear							;loop till all spaces
+
+ 0000008E			checkOnes:									;so that no extras are done
+ 0000008E  8B 45 10			MOV EAX,[EBP + 16]						;eax = cols
+ 00000091  8B 55 0C			MOV EDX,[EBP + 12]						;edx = rows
+ 00000094  83 FA 01			CMP EDX,1								;check if edx = 1
+ 00000097  74 07			JE colsOne								;if so jump to colsOne
+ 00000099  83 F8 01			CMP EAX,1								;check if cols = 1
+ 0000009C  74 06			JE rowsOne								;if so jump to rowsOne
+ 0000009E  EB 08			JMP noOnes								;if neither is a one jump down
+					
+ 000000A0			colsOne:
+ 000000A0  8B C8			MOV ECX, EAX							;ecx = cols
+ 000000A2  EB 08			JMP setOthers							;jump down
+					
+ 000000A4			rowsOne:
+ 000000A4  8B CA			MOV ECX,EDX								;ecx = rows
+ 000000A6  EB 04			JMP setOthers							;jump down
+					
+ 000000A8			noOnes:
+ 000000A8  F7 EA			IMUL EDX								;edx:eax = rows * cols
+ 000000AA  8B C8			MOV ECX,EAX								;ecx = eax
+					
+ 000000AC			setOthers:	
+ 000000AC  8B 75 14			MOV ESI, [EBP + 20]						;so that esi will hold the address of the string to hold	
+ 000000AF  8B 7D 0C			MOV EDI, [EBP + 12]						;so that ecx will hold the amount of rows and loop that many times
+ 000000B2  8B 55 10			MOV EDX, [EBP + 16]						;so that edx will hold the amount of columns 
+					
+ 000000B5			addNumber:
+					INVOKE intasc32,ADDR [ESI],[EBX]		;converts the dwords to a string
+ 000000BF  83 C3 04			ADD EBX,4								;move ebx to the next word
+ 000000C2  49				DEC ECX									;one num down
+ 000000C3  4A				DEC EDX									;one col back
+					
+ 000000C4			checkEnd:
+ 000000C4  B8 00000000			MOV EAX,0 								;eax = 0
+ 000000C9  3B C8			CMP ECX,EAX								;check if finished
+ 000000CB  74 23			JE finished								;if so jump to finished
+
+ 000000CD			checkZeros:	
+ 000000CD  B0 00			MOV AL,0								;al = 0
+ 000000CF  38 06			CMP [ESI],AL							;check for zero chars from intasc
+ 000000D1  74 03			JE makeTab								;if found turn to tab
+ 000000D3  46				INC ESI									;next char
+ 000000D4  EB EE			JMP checkEnd							;jump back to first check
+					
+ 000000D6			makeTab:
+ 000000D6  B0 09			MOV AL,9								;al = 9 = "\t"
+ 000000D8  88 06			MOV [ESI],AL							;turn [est] to tab
+					
+ 000000DA			checkEndRow:
+ 000000DA  B8 00000000			MOV EAX,0								;eax = 0 
+ 000000DF  3B D0			CMP EDX,EAX								;check if end of a row
+ 000000E1  74 03			JE nextLine								;if so insert new line char
+ 000000E3  46				INC ESI									;next char
+ 000000E4  EB CF			JMP addNumber							;add next num
+					
+ 000000E6			nextLine:
+ 000000E6  B0 0A			MOV AL,10								;put new line char in al
+ 000000E8  88 06			MOV [ESI],AL							;change [esi] into new line char
+ 000000EA  8B 55 10			MOV EDX, [EBP + 16]						;so that edx will hold the amount of columns 
+ 000000ED  46				INC ESI									;next char
+ 000000EE  EB C5			JMP addNumber							;add next num
+					
+ 000000F0			finished:
+ 000000F0  46				INC ESI									;next char
+ 000000F1  B0 00			MOV AL,0								;al = 0
+ 000000F3  88 06			MOV [ESI],AL							;change last char to 0
+					INVOKE putstring, [EBP + 20]			;display the array
+ 000000FD  5E				POP ESI									;put the registers back
+ 000000FE  5F				POP EDI
+ 000000FF  5A				POP EDX
+ 00000100  59				POP ECX
+ 00000101  5B				POP EBX
+ 00000102  58				POP EAX
+ 00000103  5D				POP EBP
+ 00000104  C3				RET										;the leave and return statement
+ 00000105				displayArray ENDP
+					
+ 00000105			sumUpArray PROC
+ 00000105  55				PUSH EBP								;to preserve the original EBP
+ 00000106  8B EC			MOV EBP,ESP								;set up for the new stack frame
+ 00000108  53				PUSH EBX								;to preserve the registers that will be used
+ 00000109  51				PUSH ECX
+ 0000010A  52				PUSH EDX
+					
+ 0000010B  8B 5D 0C			MOV EBX, [EBP + 12]						;EBX = rows
+ 0000010E  8B 45 10			MOV EAX, [EBP + 16]						;EAX = columns
+ 00000111  F7 EB			IMUL EBX								;EDX:EAX = EBX * EAX
+ 00000113  8B C8			MOV ECX, EAX							;ECX = EBX*EAX
+ 00000115  8B 5D 08			MOV EBX, [EBP + 8]						;so that ebx holds the address 
+ 00000118  8B 03			MOV EAX, [EBX]							;so that eax holds the answer
+ 0000011A  83 C3 04			ADD EBX, 4								;mov to the next number
+ 0000011D  49				DEC ECX									;so that ecx will loop the right amount of times
+					
+ 0000011E			stAddUp:
+ 0000011E  03 03			ADD EAX,[EBX]							;add the next dword
+ 00000120  83 C3 04			ADD EBX,4								;move to the next dword
+ 00000123  E2 F9			LOOP stAddUp							;loop until all dwords summed up
+					
+ 00000125  5A				POP EDX									;put the registers back
+ 00000126  5B				POP EBX
+ 00000127  59				POP ECX
+ 00000128  5D				POP EBP
+ 00000129  C3				RET										;the leave and return statement
+ 0000012A				sumUpArray ENDP
+					
+ 0000012A			smallestValue PROC
+ 0000012A  55				PUSH EBP								;to preserve the original EBP
+ 0000012B  8B EC			MOV EBP,ESP								;set up for the new stack frame
+ 0000012D  53				PUSH EBX								;to preserve the registers that will be used
+ 0000012E  51				PUSH ECX
+ 0000012F  52				PUSH EDX
+ 00000130  56				PUSH ESI
+					
+ 00000131  8B 5D 0C			MOV EBX, [EBP + 12]						;EBX = rows
+ 00000134  8B 45 10			MOV EAX, [EBP + 16]						;EAX = columns
+ 00000137  F7 EB			IMUL EBX								;EDX:EAX = EBX * EAX
+ 00000139  8B C8			MOV ECX, EAX							;ECX = EBX*EAX
+ 0000013B  8B 5D 08			MOV EBX, [EBP + 8]						;so that ebx holds the address 
+ 0000013E  8B 03			MOV EAX, [EBX]							;so that eax holds the answer
+ 00000140  8B 73 04			MOV ESI, [EBX + 4]						;so that esi will hold the next value
+ 00000143  83 C3 04			ADD EBX, 4								;mov to the next number
+ 00000146  49				DEC ECX									;so that ecx will loop the right amount of times
+					
+					
+ 00000147			stComparing:
+ 00000147  3B C6			CMP EAX,ESI								;test if esi is greater than eax
+ 00000149  7F 09			JG smaller								;if so jump down to a part that moves esi int eax
+ 0000014B  83 C3 04			ADD EBX,4								;move to the next dword
+ 0000014E  8B 33			MOV ESI,[EBX]							;so that esi will hold the next value
+ 00000150  E2 F5			LOOP stComparing						;loop until completely compared
+ 00000152  EB 04			JMP done								;so that the loop will not be done twice
+					
+ 00000154			smaller:
+ 00000154  8B C6			MOV EAX, ESI							;move esi into eax
+ 00000156  E2 EF			LOOP stComparing						;loop the loop
+					
+ 00000158			done:	
+ 00000158  5E				POP ESI									;put the registers back
+ 00000159  5A				POP EDX									
+ 0000015A  59				POP ECX
+ 0000015B  5B				POP EBX
+ 0000015C  5D				POP EBP
+ 0000015D  C3				RET										;the leave and return statement
+ 0000015E				smallestValue ENDP
+					
+ 0000015E			multArrays PROC
+ 0000015E  55				PUSH EBP								;to preserve the original EBP
+ 0000015F  8B EC			MOV EBP,ESP								;set up for the new stack frame
+ 00000161  50				PUSH EAX								;to preserve the registers that will be used
+ 00000162  53				PUSH EBX
+ 00000163  51				PUSH ECX
+ 00000164  57				PUSH EDI
+ 00000165  52				PUSH EDX
+ 00000166  56				PUSH ESI
+
+ 00000167  8B 75 14			MOV ESI, [EBP + 20]						;ESI = Address of b
+ 0000016A  8B 5D 08			MOV EBX, [EBP + 8]						;EBX = Address of a
+					
+ 0000016D			goToEndB:	
+ 0000016D  8B 45 18			MOV EAX, [EBP + 24]						;EAX = Columns in b
+ 00000170  8B 4D 0C			MOV ECX, [EBP + 12]						;ECX = rows in b
+ 00000173  F7 E9			IMUL ECX								;EDX:EAX = rows in a * columns in b
+ 00000175  8B C8			MOV ECX, EAX							;ECX = Rows in a * Columns in b
+ 00000177  BA 00000004			MOV EDX,4								;EDX = 4
+ 0000017C  F7 EA			IMUL EDX								;EDX:EAX = rows in a * columns in b * 4
+ 0000017E  03 F0			ADD ESI, EAX							;ESI = Address of b + EAX
+
+ 00000180			goToEndA:
+ 00000180  8B 45 0C			MOV EAX, [EBP + 12]						;EAX = Columns in a
+ 00000183  8B 55 10			MOV EDX, [EBP + 16]						;EDX = Rows in a
+ 00000186  F7 EA			IMUL EDX								;EDX:EAX = Columns in a * Rows in a
+ 00000188  BA 00000004			MOV EDX,4								;EDX = 4
+ 0000018D  F7 EA			IMUL EDX								;EDX:EAX = Columns in a * Rows in a * 4
+ 0000018F  03 D8			ADD EBX, EAX							;EBX = Address of a + EAX
+
+ 00000191			setNew:
+ 00000191  8B 7D 1C			MOV EDI, [EBP + 28]						;EDI = Address of new array		
+					
+ 00000194			stLoop:
+ 00000194  B8 00000004			MOV EAX, 4 								;EAX = 4 
+ 00000199  F7 E9			IMUL ECX								;EDX:EAX = 4 * ECX 
+ 0000019B  03 F8			ADD EDI, EAX							;EDI = Address of new array + EAX
+					
+ 0000019D  8B 06			MOV EAX, [ESI]							;EAX = ESI
+ 0000019F  8B 13			MOV EDX,[EBX]							;EDX = last number in a
+ 000001A1  F7 EA			IMUL EDX								;EDX:EAX = ESI * EBX
+ 000001A3  89 07			MOV [EDI],EAX							;Last value of the new array is now ESI * EBX
+
+ 000001A5  8B C1			MOV EAX,ECX								;
+ 000001A7  03 4D 10			ADD ECX,[EBP + 16]						;
+ 000001AA  49				DEC ECX									;ecx--; since one multiplication has already been done
+
+ 000001AB  3B CA			CMP ECX,EDX								;
+ 000001AD  75 0A			JNE addNums								;
+ 000001AF  E2 E3			LOOP stLoop								;
+ 000001B1  EB 1B			JMP finished							;
+					
+ 000001B3			stCheckForAdd:
+ 000001B3  3B CA			CMP ECX,EDX								;
+ 000001B5  75 02			JNE addNums								;
+ 000001B7  E2 DB			LOOP stLoop								;
+
+ 000001B9			addNums:	
+ 000001B9  B8 00000004			MOV EAX,4 								;EAX = 4
+ 000001BE  F6 6D 18			IMUL byte ptr [EBP + 24]				;EDX:EAX = 4 * columns in b
+ 000001C1  03 F0			ADD ESI, EAX							;ESI -= 4 * columns in b; moved back one row
+ 000001C3  83 C3 04			ADD EBX, 4								;EBX -= 4 ; moved back one column
+ 000001C6  8B 06			MOV EAX, [ESI]							;EAX = ESI
+ 000001C8  F6 2B			IMUL byte ptr [EBX]						;EDX:EAX = ESI * EBX
+ 000001CA  01 07			ADD [EDI],EAX							;Last value of the new array is now ESI * EBX + another row in each array
+					
+ 000001CC  E2 E5			LOOP stCheckForAdd						;loop back to checking for more additions
+
+ 000001CE			finished:
+
+ 000001CE  5E				POP ESI									;fix the registers
+ 000001CF  5A				POP EDX
+ 000001D0  5F				POP EDI
+ 000001D1  59				POP ECX
+ 000001D2  5B				POP EBX
+ 000001D3  58				POP EAX
+ 000001D4  5D				POP EBP
+					
+ 000001D5  C3				RET										;the leave and return statement
+ 000001D6				multArrays ENDP
+					
+					END
+Microsoft (R) Macro Assembler Version 6.11		    11/02/15 07:55:12
+proj3methods.asm					     Symbols 2 - 1
+
+
+
+
+Segments and Groups:
+
+                N a m e                 Size     Length   Align   Combine Class
+
+FLAT . . . . . . . . . . . . . .	GROUP
+_DATA  . . . . . . . . . . . . .	32 Bit	 00000000 DWord	  Public  'DATA'	
+_TEXT  . . . . . . . . . . . . .	32 Bit	 000001D6 DWord	  Public  'CODE'	
+
+
+Procedures,  parameters and locals:
+
+                N a m e                 Type     Value    Attr
+
+ExitProcess  . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
+ascint32 . . . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
+displayArray . . . . . . . . . .	P Near	 00000067 _TEXT	Length= 0000009E Public
+  stClear  . . . . . . . . . . .	L Near	 00000087 _TEXT	
+  checkOnes  . . . . . . . . . .	L Near	 0000008E _TEXT	
+  colsOne  . . . . . . . . . . .	L Near	 000000A0 _TEXT	
+  rowsOne  . . . . . . . . . . .	L Near	 000000A4 _TEXT	
+  noOnes . . . . . . . . . . . .	L Near	 000000A8 _TEXT	
+  setOthers  . . . . . . . . . .	L Near	 000000AC _TEXT	
+  addNumber  . . . . . . . . . .	L Near	 000000B5 _TEXT	
+  checkEnd . . . . . . . . . . .	L Near	 000000C4 _TEXT	
+  checkZeros . . . . . . . . . .	L Near	 000000CD _TEXT	
+  makeTab  . . . . . . . . . . .	L Near	 000000D6 _TEXT	
+  checkEndRow  . . . . . . . . .	L Near	 000000DA _TEXT	
+  nextLine . . . . . . . . . . .	L Near	 000000E6 _TEXT	
+  finished . . . . . . . . . . .	L Near	 000000F0 _TEXT	
+extractDwords  . . . . . . . . .	P Near	 00000000 _TEXT	Length= 00000067 Public
+  findNums . . . . . . . . . . .	L Near	 00000012 _TEXT	
+  nextChar . . . . . . . . . . .	L Near	 00000037 _TEXT	
+  addNum . . . . . . . . . . . .	L Near	 0000003A _TEXT	
+  endOfLine  . . . . . . . . . .	L Near	 0000005C _TEXT	
+getche . . . . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
+getch  . . . . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
+getstring  . . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
+intasc32 . . . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
+multArrays . . . . . . . . . . .	P Near	 0000015E _TEXT	Length= 00000078 Public
+  goToEndB . . . . . . . . . . .	L Near	 0000016D _TEXT	
+  goToEndA . . . . . . . . . . .	L Near	 00000180 _TEXT	
+  setNew . . . . . . . . . . . .	L Near	 00000191 _TEXT	
+  stLoop . . . . . . . . . . . .	L Near	 00000194 _TEXT	
+  stCheckForAdd  . . . . . . . .	L Near	 000001B3 _TEXT	
+  addNums  . . . . . . . . . . .	L Near	 000001B9 _TEXT	
+  finished . . . . . . . . . . .	L Near	 000001CE _TEXT	
+putch  . . . . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
+putstring  . . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
+smallestValue  . . . . . . . . .	P Near	 0000012A _TEXT	Length= 00000034 Public
+  stComparing  . . . . . . . . .	L Near	 00000147 _TEXT	
+  smaller  . . . . . . . . . . .	L Near	 00000154 _TEXT	
+  done . . . . . . . . . . . . .	L Near	 00000158 _TEXT	
+sumUpArray . . . . . . . . . . .	P Near	 00000105 _TEXT	Length= 00000025 Public
+  stAddUp  . . . . . . . . . . .	L Near	 0000011E _TEXT	
+
+
+Symbols:
+
+                N a m e                 Type     Value    Attr
+
+@CodeSize  . . . . . . . . . . .	Number	 00000000h   
+@DataSize  . . . . . . . . . . .	Number	 00000000h   
+@Interface . . . . . . . . . . .	Number	 00000000h   
+@Model . . . . . . . . . . . . .	Number	 00000007h   
+@code  . . . . . . . . . . . . .	Text   	 _TEXT
+@data  . . . . . . . . . . . . .	Text   	 FLAT
+@fardata?  . . . . . . . . . . .	Text   	 FLAT
+@fardata . . . . . . . . . . . .	Text   	 FLAT
+@stack . . . . . . . . . . . . .	Text   	 FLAT
+
+	   0 Warnings
+	   0 Errors

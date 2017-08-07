@@ -1,0 +1,19 @@
+Monster|Description|Size|Danger|Item(%Chance)|Values in gold
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Isopod Shell|5|4
+Stone Axe|7|0.03
+Spider Shaped Gold Charm|1|10
+[Metal] Ring|2|5
+[Color] Mushroom|2|5
+[Magic] Scroll|3|30
+Iron Ore|5|30
+Quartz Rock|7|10
+Gold Ore|1|60
+Salt Stone|3|20
+[Metal] Ring|2|5
+[Color] Mushroom|2|5
+[Magic] Scroll|3|30
+Iron Ore|5|30
+Quartz Rock|7|10
+Gold Ore|1|60
+Salt Stone|3|20

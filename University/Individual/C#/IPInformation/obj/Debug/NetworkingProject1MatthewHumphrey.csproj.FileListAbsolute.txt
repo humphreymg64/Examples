@@ -1,0 +1,6 @@
+C:\Users\Matthew\Documents\Visual Studio 2015\Projects\NetworkingProject1MatthewHumphrey\bin\Debug\NetworkingProject1MatthewHumphrey.exe.config
+C:\Users\Matthew\Documents\Visual Studio 2015\Projects\NetworkingProject1MatthewHumphrey\bin\Debug\NetworkingProject1MatthewHumphrey.exe
+C:\Users\Matthew\Documents\Visual Studio 2015\Projects\NetworkingProject1MatthewHumphrey\bin\Debug\NetworkingProject1MatthewHumphrey.pdb
+C:\Users\Matthew\Documents\Visual Studio 2015\Projects\NetworkingProject1MatthewHumphrey\obj\Debug\NetworkingProject1MatthewHumphrey.csprojResolveAssemblyReference.cache
+C:\Users\Matthew\Documents\Visual Studio 2015\Projects\NetworkingProject1MatthewHumphrey\obj\Debug\NetworkingProject1MatthewHumphrey.exe
+C:\Users\Matthew\Documents\Visual Studio 2015\Projects\NetworkingProject1MatthewHumphrey\obj\Debug\NetworkingProject1MatthewHumphrey.pdb

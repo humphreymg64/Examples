@@ -1,0 +1,5 @@
+Unlock|1d1
+Reinforce Lock|1d1
+Desinigrate Object|1d1
+Burst Open|1d1
+Summon Gremlin|1d1

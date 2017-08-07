@@ -1,0 +1,11 @@
+Monster|Description|Size|Danger|Item(%Chance)|Values in gold
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Slenshi Spawn|A huge purple spider that hunts near the crag at night.|5'5"|4||
+Small Slenshi Spawn|A large purple spider that hunts near the crag at night.|3'5"|2||
+Giant Slenshi Spawn|A giant purple spider that hunts near the crag at night.|7'5"|6||
+Bandit|A violent humanoid after your money.|6'2"|4|Copper Dagger(95),Copper Sword(50),Coat(40),Copper Helmet(10)|0.5,0.8,0.1,0.2
+Bandit|A violent humanoid after your money.|6'2"|4|Copper Dagger(95),Copper Axe(50),Coat(40),Copper Helmet(10)|0.5,0.8,0.1,0.2
+Bandit|A violent humanoid after your money.|6'2"|4|Copper Dagger(95),Bow(50),20 Arrows(75),Coat(40),Copper Helmet(10)|0.5,0.5,0.02,0.1,0.2
+Bandit|A violent humanoid after your money.|6'2"|4|Copper Dagger(95),Magic Staff(50),Coat(40),Copper Helmet(10)|0.5,0.8,0.1,0.2
+Demon Swordsman|A demon lord on a quest in the human world to gain their first 18 souls. They wear large hats or tubans to concile their demonic features. |6'7"|6|Demon Bone Blade(50),Demon Horn Blade(50), Coat(90)|50,30,0.1
+Demonic Sevant|A servant of a demon in hopes of gaining its favor|6'2"|4|Demon Charm(100),Iron Dagger(40),Silver Stone(2),Magic Scroll(10)|10,10,30,40
